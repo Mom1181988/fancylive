@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تم الاختراق!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0F0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.6;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+        .hacker-text {
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 5px #0F0;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+        .message {
+            font-size: 24px;
+            margin: 20px 0;
+            opacity: 0;
+            animation: fadeIn 2s forwards 1s;
+        }
+        .ascii-art {
+            font-family: monospace;
+            white-space: pre;
+            font-size: 14px;
+            margin: 30px 0;
+            opacity: 0;
+            animation: fadeIn 2s forwards 2s;
+            direction: ltr;
+        }
+        .blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .typing {
+            border-right: 2px solid #0F0;
+            white-space: nowrap;
+            overflow: hidden;
+            margin: 0 auto;
+            animation: 
+                typing 3.5s steps(40, end),
+                blink-caret .75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #0F0; }
+        }
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        @media (max-width: 480px) {
+            .hacker-text {
+                font-size: 28px;
+            }
+            .message {
+                font-size: 20px;
+            }
+            .ascii-art {
+                font-size: 12px;
+            }
+        }
+        @media (max-width: 360px) {
+            .hacker-text {
+                font-size: 24px;
+            }
+            .message {
+                font-size: 18px;
+            }
+            .ascii-art {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas class="matrix-bg" id="matrix"></canvas>
+    <div class="container">
+        <div class="hacker-text">تم اختراق جهازك بواسطة عمك أبو حسن!</div>
+        <div class="message">سوف يتم تسريب جميع بياناتك 😈</div>
+        <div class="ascii-art">
+   _____          __  __ ______    ______      ________ _____  
+  / ____|   /\   |  \/  |  ____|  / __ \ \    / /  ____|  __ \ 
+ | |  __   /  \  | \  / | |__    | |  | \ \  / /| |__  | |__) |
+ | | |_ | / /\ \ | |\/| |  __|   | |  | |\ \/ / |  __| |  _  / 
+ | |__| |/ ____ \| |  | | |____  | |__| | \  /  | |____| | \ \ 
+  \_____/_/    \_\_|  |_|______|  \____/   \/   |______|_|  \_\
+        </div>
+        <div class="message blink">جاري تسريب البيانات... <span class="cursor">▋</span></div>
+    </div>
+
+    <script>
+        // Matrix effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        const columns = canvas.width/fontSize;
+
+        const rainDrops = Array(Math.floor(columns)).fill(1);
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+
+            for(let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i*fontSize, rainDrops[i]*fontSize);
+
+                if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        }
+
+        setInterval(draw, 30);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
